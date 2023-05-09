@@ -8,6 +8,7 @@
     "server": "ts-node -P ./server/server.tsconfig.json ./server/server.ts",
     "build": "ng build",
     "test": "ng test",
+    "test-no-watch": "ng test --no-watch",
     "lint": "ng lint",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
