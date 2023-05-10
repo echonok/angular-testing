@@ -1,9 +1,8 @@
 import { CoursesService } from './courses.service';
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { COURSES } from '../../../../server/db-data';
+import { COURSES, findLessonsForCourse } from '../../../../server/db-data';
 import { Course } from '../model/course';
-import { error } from 'protractor';
 import { HttpErrorResponse } from '@angular/common/http';
 
 describe('CoursesService', () => {
@@ -70,7 +69,23 @@ describe('CoursesService', () => {
     );
     const req = httpTestingController.expectOne('/api/courses/12');
     expect(req.request.method).toEqual('PUT');
-    req.flush('Save course', { status: 500, statusText: 'Internal error'});
+    req.flush('Save course', { status: 500, statusText: 'Internal error' });
+  });
+
+  it('should find a list of lessons', () => {
+    coursesService.findLessons(12).subscribe((lessons) => {
+        expect(lessons).toBeTruthy();
+        expect(lessons.length).toBe(3)
+      },
+    );
+    const request = httpTestingController.expectOne((req) => req.url === '/api/lessons');
+    expect(request.request.method).toEqual('GET');
+    expect(request.request.params.get('courseId')).toEqual('12');
+    expect(request.request.params.get('filter')).toEqual('');
+    expect(request.request.params.get('sortOrder')).toEqual('asc');
+    expect(request.request.params.get('pageNumber')).toEqual('0');
+    expect(request.request.params.get('pageSize')).toEqual('3');
+    request.flush({ payload: findLessonsForCourse(12).slice(0, 3) });
   });
 
   afterEach(() => {
