@@ -1,6 +1,6 @@
 import {
   ComponentFixture, fakeAsync, flush,
-  TestBed, tick,
+  TestBed,
   waitForAsync
 } from '@angular/core/testing';
 import { CoursesModule } from '../courses.module';
