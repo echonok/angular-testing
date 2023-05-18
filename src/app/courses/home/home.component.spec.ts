@@ -1,26 +1,20 @@
 import {
-  ComponentFixture,
-  fakeAsync,
-  flush,
-  flushMicrotasks,
-  TestBed,
+  ComponentFixture, fakeAsync, flush,
+  TestBed, tick,
   waitForAsync
 } from '@angular/core/testing';
 import { CoursesModule } from '../courses.module';
 import { DebugElement } from '@angular/core';
 
 import { HomeComponent } from './home.component';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { CoursesService } from '../services/courses.service';
-import { HttpClient } from '@angular/common/http';
-import { COURSES } from '../../../../server/db-data';
 import { setupCourses } from '../common/setup-test-data';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { click } from '../common/test-utils';
 
-describe('HomeComponent', () => {
+fdescribe('HomeComponent', () => {
 
   let fixture: ComponentFixture<HomeComponent>;
   let component: HomeComponent;
@@ -79,16 +73,32 @@ describe('HomeComponent', () => {
     expect(tabs.length).withContext('Unexpected number of tabs found').toBe(2);
   });
 
-  it('should display advanced courses when tab clicked', () => {
+  it('should display advanced courses when tab clicked', fakeAsync(() => {
     coursesService.findAllCourses.and.returnValue(of(setupCourses()));
     fixture.detectChanges();
-    const tabs = el.queryAll(By.css('.mdc-tab'));
+    const tabs = el.queryAll(By.css('.mat-mdc-tab'));
     click(tabs[1]);
+    fixture.detectChanges();
+    flush();
     fixture.detectChanges();
     const cardTitles = el.queryAll(By.css('.mat-mdc-card-title'));
     expect(cardTitles.length).withContext('Could not find card titles').toBeGreaterThan(0);
     expect(cardTitles[0].nativeElement.textContent).withContext('Could not find first title').toContain('Angular Security Course - Web Security Fundamentals');
-  });
+  }));
+
+  it('should display advanced courses when tab clicked, VER2', waitForAsync(() => {
+    coursesService.findAllCourses.and.returnValue(of(setupCourses()));
+    fixture.detectChanges();
+    const tabs = el.queryAll(By.css('.mat-mdc-tab'));
+    click(tabs[1]);
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      const cardTitles = el.queryAll(By.css('.mat-mdc-card-title'));
+      expect(cardTitles.length).withContext('Could not find card titles').toBeGreaterThan(0);
+      expect(cardTitles[0].nativeElement.textContent).withContext('Could not find first title').toContain('Angular Security Course - Web Security Fundamentals');
+    });
+  }));
 
 });
 
