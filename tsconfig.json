@@ -15,6 +15,13 @@
       "ES2022",
       "DOM",
       "ES2022.Object"
+    ],
+    "types": [
+      "cypress"
     ]
-  }
+  },
+  "exclude": [
+    "./cypress.config.ts",
+    "cypress",
+  ],
 }
