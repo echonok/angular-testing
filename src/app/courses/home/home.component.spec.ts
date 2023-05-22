@@ -1,5 +1,7 @@
 import {
-  ComponentFixture, fakeAsync, flush,
+  ComponentFixture,
+  fakeAsync,
+  flush,
   TestBed,
   waitForAsync
 } from '@angular/core/testing';
